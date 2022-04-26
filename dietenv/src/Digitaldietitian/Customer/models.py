@@ -2,7 +2,7 @@ import email
 from pyexpat import model
 from sys import maxsize
 from django.db import models
-from django.forms import FloatField
+from django.forms import FloatField, PasswordInput
 from django.contrib.auth.models import AbstractUser
 
 class Role(models.Model):
@@ -18,7 +18,7 @@ class Zone(models.Model):
 class Region(models.Model):
     regionId=models.AutoField(primary_key=True)
     regionName=models.CharField(blank=False,null=False,max_length=20)
-    zone=models.ForeignKey('Zone',related_name='zoneId', on_delete=models.CASCADE)
+    zone=models.ForeignKey('Zone', on_delete=models.CASCADE)
     dateRegistered=models.DateTimeField(auto_now=True)
 
 class MealtimeName(models.Model):
@@ -46,15 +46,22 @@ class User(AbstractUser):
     email=models.EmailField(primary_key=True)
     phoneno=models.CharField(null=False, blank=False, unique=True,max_length=12)
     customerName=models.CharField(null=False,blank=False,max_length=60)
-    role=models.ForeignKey('Role', related_name='roleID', on_delete=models.CASCADE)
-    age=models.IntegerField(max_length=3,null=False,blank=False)
+    role=models.ForeignKey(Role, on_delete=models.CASCADE)
+    age=models.IntegerField(null=False,blank=False)
     height=models.DecimalField(max_digits=2,decimal_places=2 ,blank=False,null=False)
     weight=models.DecimalField(max_digits=3,decimal_places=2 ,blank=False,null=False)
-    exercising=models.ForeignKey("ExercisingRate", related_name='ERId', on_delete=models.CASCADE)
+    exercising=models.ForeignKey(ExercisingRate, on_delete=models.CASCADE)
     disease = models.ForeignKey(Diseases, on_delete=models.CASCADE)
-    healthStatus=models.ForeignKey(HealthyStatus,related_name='HSId', on_delete=models.CASCADE)
+    healthStatus=models.ForeignKey(HealthyStatus, on_delete=models.CASCADE)
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
     dateRegistered=models.DateTimeField(auto_now=True)
+    password=models.CharField(max_length=100,null=False,blank=False)
+
+    class Meta:
+        permissions = [
+            ("change_details", "See diet plan"),
+            ("close_app", "Can chat with dietitian"),
+        ]
 
 class Food(models.Model):
     pass
