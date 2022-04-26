@@ -108,3 +108,11 @@ class FoodData(models.Model):
     vitamin_K=models.DecimalField(max_digits=6,decimal_places=2)
     amount=models.CharField(max_length=50)
     dateRegistered=models.DateTimeField(auto_now=True)
+    zone = models.ForeignKey(Zone, on_delete=models.CASCADE,default=None)
+    mealTime=models.ManyToManyField(MealtimeName)
+    
+class MealAssigned(models.Model):
+    mealTime=models.ForeignKey(MealtimeName, on_delete=models.CASCADE)
+    customer=models.ForeignKey(User, on_delete=models.CASCADE)
+    food=models.ForeignKey(FoodData, on_delete=models.CASCADE,default=None)
+    dateofentry=models.DateTimeField(auto_now=True, auto_now_add=False)
