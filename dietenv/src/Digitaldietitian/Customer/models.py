@@ -1,6 +1,3 @@
-import email
-from pyexpat import model
-from sys import maxsize
 from django.db import models
 from django.forms import FloatField, PasswordInput
 from django.contrib.auth.models import AbstractUser
