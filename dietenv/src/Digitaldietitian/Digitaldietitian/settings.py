@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-wc0e8480)7sliwt@sk#x#&4$jj8@oc+6spn78^m&d+sgfia4z%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.11','localhost','127.0.0.1']
 
 
 # Application definition
@@ -79,8 +79,15 @@ WSGI_APPLICATION = 'Digitaldietitian.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'Dietitian.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':'DigitalDietitian',
+        'USER':'root',
+        'PASSWORD':'',
+        'HOST':'localhost',
+        'PORT':3306,
+        'OPTIONS': {  
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
+        }  
     }
 }
 
