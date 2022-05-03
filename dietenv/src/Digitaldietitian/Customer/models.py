@@ -1,5 +1,4 @@
 from django.db import models
-from django.forms import FloatField, PasswordInput
 from django.contrib.auth.models import AbstractUser
 
 class Role(models.Model):
