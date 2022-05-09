@@ -32,8 +32,8 @@ ALLOWED_HOSTS = ['192.168.1.11','localhost','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    
     'rest_framework',
-    'dietitian',
     'Customer',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dietitian',
+    
     
 ]
 
@@ -81,7 +83,7 @@ WSGI_APPLICATION = 'Digitaldietitian.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':'DigitalDietitian',
+        'NAME':'Diet',
         'USER':'root',
         'PASSWORD':'',
         'HOST':'localhost',
@@ -110,14 +112,14 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-AUTH_USER_MODEL = 'Customer.User'
+AUTH_USER_MODEL = 'dietitian.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
