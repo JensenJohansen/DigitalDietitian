@@ -3,11 +3,6 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
 
-class Role(models.Model):
-    roleId=models.AutoField(primary_key=True)
-    roleName=models.CharField(blank=False,null=False,max_length=20)
-    dateRegistered=models.DateTimeField(auto_now=True)
-
 class Zone(models.Model):
     zoneId=models.AutoField(primary_key=True)
     zoneName=models.CharField(blank=False,null=False,max_length=50)

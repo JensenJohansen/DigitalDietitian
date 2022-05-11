@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import pymysql  
 pymysql.install_as_MySQLdb()
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-wc0e8480)7sliwt@sk#x#&4$jj8@oc+6spn78^m&d+sgfia4z%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.11','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['192.168.1.11','localhost','127.0.0.1','172.20.10.8']
 
 
 # Application definition
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dietitian',
+    'phonenumber_field',
     
     
 ]
@@ -135,3 +137,19 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+PASSWORD_HASHERS = [
+  'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+  'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+  'django.contrib.auth.hashers.Argon2PasswordHasher',
+  'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+  'django.contrib.auth.hashers.BCryptPasswordHasher',
+  'django.contrib.auth.hashers.SHA1PasswordHasher',
+  'django.contrib.auth.hashers.MD5PasswordHasher',
+  'django.contrib.auth.hashers.UnsaltedSHA1PasswordHasher',
+  'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
+  'django.contrib.auth.hashers.CryptPasswordHasher',
+]

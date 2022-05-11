@@ -4,7 +4,9 @@ from .models import User
 from Customer.models import *
 
 admin.site.register(User)
-admin.site.register(Customer)
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('email',)
 admin.site.register(Zone)
-admin.site.register(Role)
+
 
