@@ -2,15 +2,16 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import get_object_or_404, redirect
 from .models import *
 from .serializers import *
+from rest_framework.parsers import JSONParser,MultiPartParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,generics,permissions,viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,action
+import csv
+from django.core.files.base import ContentFile
+from django.core.files.storage import FileSystemStorage
 
-
-def registration(request):
-    pass
-
+fs=FileSystemStorage(location='tmp/')
 
 @api_view(['GET', 'POST'])
 def userlogin(request):
@@ -80,3 +81,71 @@ def customer_detail(request, pk,format=None):
     elif request.method == 'DELETE':
         customer.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class FoodViewsets(viewsets.ModelViewSet):
+    """
+    Food Data
+    """
+    queryset=FoodData.objects.all()
+    serializer_class=FoodSerializer
+    @action(detail=False,methods=['POST'])
+    def upload_data(request):
+        file=request.FILES['file']
+        content=file.read()
+        file_content=ContentFile(content)
+        file_name=fs.save(
+            "tmp.csv",file_content
+        )
+        tmp_file=fs.path(file_name)
+        csv_file=open(tmp_file,errors="ignore")
+        reader=csv.reader(csv_file)
+        next(reader)
+
+        for id_,row in enumerate(reader):
+            (Name,Alpha_Carotene,Ash,	Beta_Carotene,	Beta_Cryptoxanthin,	Carbohydrate,	Cholesterol,	Choline,Fiber,
+            	Kilocalories,Lutein_and_Zeaxanthin,	Lycopene,Manganese,	Niacin,	Pantothenic_Acid,Protein,	Refuse_Percentage,
+                	Retinol	,Riboflavin,Selenium,Sugar_Total,	Thiamin,Water,	Fat_Monosaturated_Fat,	Fat_Polysaturated_Fat,Fat_Saturated_Fat,
+                    	Fat_Total_Lipid,	Major_Minerals_Calcium,	Major_Minerals_Copper,	Major_Minerals_Iron,	Major_Minerals_Magnesium,	Major_Minerals_Phosphorus,
+                        	Major_Minerals_Potassium,	Major_Minerals_Sodium,	Major_Minerals_Zinc,	Vitamins_Vitamin_A_IU,	Vitamins_Vitamin_A_RAE,
+                            	Vitamins_Vitamin_B12,	Vitamins_Vitamin_B6,	Vitamins_Vitamin_C,	Vitamins_Vitamin_E,	Vitamins_Vitamin_K,	Household_Weights_2nd_Household_Weight_Description
+            )=row
+
+class RegionView(generics.GenericAPIView):
+    serializer_class=RegionSerializer
+    queryset=Region.objects.all()
+    lookup_field = 'regionName'
+
+    def get(self, request):
+            region = Region.objects.values("regionName","regionId")
+            serializer = RegionSerializer(region, many=True)
+            return Response(serializer.data)
+
+class ZoneView(generics.GenericAPIView):
+    serializer_class=ZoneSerializer
+    queryset=Zone.objects.all()
+    lookup_field = 'zoneName'
+
+    def get(self, request):
+        zone = Zone.objects.values('zoneName','zoneId')
+        serializer = ZoneSerializer(zone, many=True)
+        return Response(serializer.data)
+
+class ExercisingView(generics.GenericAPIView):
+    serializer_class=ExerciseSerializer
+    queryset=ExercisingRate.objects.all()
+    lookup_field = 'ERName'
+
+    def get(self, request):
+        exercising = ExercisingRate.objects.values('ERName','ERId')
+        serializer =ExerciseSerializer(exercising, many=True)
+        return Response(serializer.data)
+
+class DiseaseView(generics.GenericAPIView):
+    serializer_class=DiseasesSerializer
+    queryset=Diseases.objects.all()
+    lookup_field = 'DName'
+
+    def get(self, request):
+        disease = Diseases.objects.values('DId','DName')
+        serializer =DiseasesSerializer(disease, many=True)
+        return Response(serializer.data)

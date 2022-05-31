@@ -11,7 +11,7 @@ def nameFile(instance, filename):
     return '/'.join(['images', str(instance.customerName), filename])
 
 class Customer(models.Model):
-    userimage=models.ImageField(upload_to=nameFile,default='defimg.png')
+    # userimage=models.ImageField(upload_to=nameFile,default='defimg.png')
     customerID=models.CharField(unique=True,max_length=20,null=False,blank=False)
     email=models.EmailField(primary_key=True)
     phoneno=PhoneNumberField()

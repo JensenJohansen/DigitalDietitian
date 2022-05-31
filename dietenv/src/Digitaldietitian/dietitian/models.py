@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
@@ -110,4 +111,4 @@ class FoodData(models.Model):
     amount=models.CharField(max_length=50)
     dateRegistered=models.DateTimeField(auto_now=True)
     zone = models.ForeignKey(Zone, on_delete=models.CASCADE,default=None)
-    mealTime=models.ManyToManyField(MealtimeName)
+    mealTime=models.ManyToManyField(MealtimeName,default=None)
