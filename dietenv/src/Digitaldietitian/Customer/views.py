@@ -10,6 +10,7 @@ from rest_framework.decorators import api_view,action
 import csv
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
+from .CustomerAuthentication import loginme
 
 fs=FileSystemStorage(location='tmp/')
 
@@ -19,9 +20,9 @@ def userlogin(request):
     User login
     """
     if request.method=='POST':
-        username = request.POST['email']
-        password = request.POST['password']
-        user = login(username=username, password=password)
+        username = request.data.get('email')
+        password = request.data.get('password')
+        user = loginme(username,password)
         if user is not None:
             return redirect('/user/{user.email}')  
         else:
