@@ -1,4 +1,5 @@
 from dataclasses import field
+from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import AbstractBaseUser
@@ -26,7 +27,7 @@ class Customer(models.Model):
     dateRegistered=models.DateTimeField(auto_now=True)
     password=models.CharField(max_length=100,null=False,blank=False)
     is_active = models.BooleanField(_('active'), default=True)
-    lastlogin=models.CharField(max_length=100,default=datetime.today().date())
+    lastlogin=models.CharField(max_length=100,default=(datetime.today().date()-timedelta(days=1)))
 
     class Meta:
         ordering = ('email',)
