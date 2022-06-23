@@ -14,25 +14,25 @@ class DataViewApi(generics.GenericAPIView):
         """
         if instance == "region":
             try:
-                region = Region.objects.all()
+                region = Region.objects.values('regionName')
             except region.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
             if request.method == 'GET':
-                # region = Region.objects.values('regionName')
+                region = Region.objects.values('regionName')
                 serializer = RegionSerializer(region)
                 return Response(serializer.data)
 
-            elif instance == "exercising" and request.method == 'GET':
-                exercising = ExercisingRate.objects.values('ERName')
-                serializer = ExerciseSerializer(exercising)
-                return Response(serializer.data)
+        elif instance == "exercising" and request.method == 'GET':
+            exercising = ExercisingRate.objects.values('ERName')
+            serializer = ExerciseSerializer(exercising)
+            return Response(serializer.data)
 
-            elif instance == "diseases" and request.method == 'GET':
-                diseases = Diseases.objects.values('DName')
-                serializer = DiseasesSerializer(diseases)
-                return Response(serializer.data)
-            else:
-                return Response(status=status.HTTP_404_NOT_FOUND)
+        elif instance == "diseases" and request.method == 'GET':
+            diseases = Diseases.objects.values('DName')
+            serializer = DiseasesSerializer(diseases)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def region_detail(request, pk,format=None):

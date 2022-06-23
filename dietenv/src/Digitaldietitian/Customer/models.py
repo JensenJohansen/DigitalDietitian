@@ -26,6 +26,7 @@ class Customer(models.Model):
     dateRegistered=models.DateTimeField(auto_now=True)
     password=models.CharField(max_length=100,null=False,blank=False)
     is_active = models.BooleanField(_('active'), default=True)
+    lastlogin=models.CharField(max_length=100,default=datetime.today().date())
 
     class Meta:
         ordering = ('email',)
@@ -35,4 +36,4 @@ class MealAssigned(models.Model):
     mealTime=models.ForeignKey(MealtimeName, on_delete=models.CASCADE)
     customer=models.ForeignKey(Customer, on_delete=models.CASCADE)
     food=models.ForeignKey(FoodData, on_delete=models.CASCADE,default=None)
-    dateofentry=models.DateTimeField(auto_now=True, auto_now_add=False)
+    dateofentry=models.DateField(auto_now=False, auto_now_add=True)
