@@ -1,20 +1,10 @@
-# from msilib.schema import ReserveCost
-from cgitb import lookup
-from datetime import timedelta,datetime
-import email
-from unicodedata import name
-from urllib import response
-from django.contrib.auth import authenticate, login
-from django.shortcuts import get_object_or_404, redirect, render
+from datetime import datetime
+from django.shortcuts import redirect
 from .models import *
 from .serializers import *
-from rest_framework.parsers import JSONParser,MultiPartParser
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status,generics,permissions,viewsets
-from rest_framework.decorators import api_view,action
-import csv
-from django.core.files.base import ContentFile
+from rest_framework import status,generics
+from rest_framework.decorators import api_view
 from django.core.files.storage import FileSystemStorage
 from .CustomerAuthentication import loginme
 from dietitian.models import FoodData
@@ -62,9 +52,6 @@ class UserRegister(generics.GenericAPIView):
             users = Customer.objects.all()
             serializer = CustomerSerializers(users, many=True)
             return Response(serializer.data)
-
-    
-
     def post(self, request, *args, **kwargs):
         serializer = CustomerSerializers(data=request.data)
         if serializer.is_valid():
@@ -96,67 +83,6 @@ def customer_detail(request, pk,format=None):
     elif request.method == 'DELETE':
         customer.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-class FoodViewSet(viewsets.ModelViewSet):
-    """
-    Food Data
-    """
-    queryset=FoodData.objects.all()
-    serializer_class=FoodSerializer
-    @action(detail=False,methods=['POST'])
-    def upload_data(self,request):
-        if request.method=='POST':
-            print(request.data)
-            file=request.FILES['file']
-            content=file.read()
-            file_content=ContentFile(content)
-            file_name=fs.save(
-                "tmp.csv",file_content
-            )
-            tmp_file=fs.path(file_name)
-            csv_file=open(tmp_file,errors="ignore")
-            reader=csv.reader(csv_file)
-            next(reader)
-
-            food_list=[]
-            for id_,row in enumerate(reader):
-                (Name,Ash,Carbohydrate,	Fiber,Sugar_Total,Water,	Fat_Monosaturated_Fat,
-                    Fat_Polysaturated_Fat,Fat_Saturated_Fat,Fat_Total_Lipid,Vitamins_Vitamin_A_IU,
-                    Vitamins_Vitamin_A_RAE,Vitamins_Vitamin_B12,Vitamins_Vitamin_B6,
-                    Vitamins_Vitamin_C,	Vitamins_Vitamin_E,	Vitamins_Vitamin_K,Major_Minerals_Calcium,
-                    Major_Minerals_Iron,Major_Minerals_Potassium, Major_Minerals_Sodium,Protein,Cholesterol,Kilocalories)=row
-                food_list.append(
-                    FoodData(
-                        Name,
-                        Ash,
-                        Carbohydrate,
-                        Fiber,
-                        Sugar_Total,
-                        Water,
-                        Fat_Monosaturated_Fat,
-                        Fat_Polysaturated_Fat,
-                        Fat_Saturated_Fat,
-                        Fat_Total_Lipid,
-                        Vitamins_Vitamin_A_IU,
-                        Vitamins_Vitamin_A_RAE,
-                        Vitamins_Vitamin_B12,
-                        Vitamins_Vitamin_B6,
-                        Vitamins_Vitamin_C,
-                        Vitamins_Vitamin_E,
-                        Vitamins_Vitamin_K,
-                        Major_Minerals_Calcium,
-                        Major_Minerals_Iron,
-                        Major_Minerals_Potassium,
-                        Major_Minerals_Sodium,
-                        Protein,
-                        Cholesterol,
-                        Kilocalories
-                    )
-                )
-            FoodData.objects.bulk_create(food_list)
-            return Response("data uploaded successfully")
-        else:
-            print("method not post")
 
 class FoodView(generics.GenericAPIView):
     serializer_class=MealAssignedSerializer
@@ -308,10 +234,19 @@ class FoodView(generics.GenericAPIView):
 
             mealassigned=MealAssigned.objects.filter(customer_id=pk,dateofentry=k['lastlogin'])[:9]
             serializer=MealAssignedSerializer(mealassigned, many=True)
-            print(serializer.data)
             return Response(serializer.data)
 
-        
+class Food_detailsView(generics.GenericAPIView):
+    serializer_class=FoodSerializer
+    queryset=FoodData.objects.all()
+    def get(self,request):
+        fooddetails=FoodData.objects.all()
+        serializer=FoodSerializer(fooddetails,many=True)
+        return Response(serializer.data)
+    def get(self,request,pk=None):
+        fooddetails=FoodData.objects.get(name=pk)
+        serializer=FoodSerializer(fooddetails)
+        return Response(serializer.data)
 
 
 class RegionView(generics.GenericAPIView):
